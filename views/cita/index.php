@@ -1,6 +1,10 @@
 <h1 class="nombre-pagina">Crear Nueva Cita</h1>
 <p class="descripcion-pagina">Elige tus servicios y coloca tus datos</p>
 
+<?php 
+    include_once __DIR__ . '/../Templates/barra.php';
+?>
+
 <div id="app">
     <nav class="tabs">
         <button class="actual" type="button" data-paso="1">Servicios</button>
@@ -40,12 +44,20 @@
 
             <div class="campo">
                 <label for="hora">Hora</label>
-                <input
-                    id="hora"
-                    type="time"
-                />
+                <select id="hora">
+            <option value="10:00">10:00 am</option>
+            <option value="11:00">11:00 am</option>
+            <option value="12:00">12:00 pm</option>
+            <option value="13:00">13:00 pm</option>
+            <option value="14:00">14:00 pm</option>
+            <option value="15:00">15:00 pm</option>
+            <option value="16:00">16:00 pm</option>
+            <option value="17:00">17:00 pm</option>
+            </select>
             </div>
             <input type="hidden" id="id" value="<?php echo $id; ?>" >
+            <br>
+            <p style="text-align: center;">Si necesitas una cita en especial llama al: <strong>325-141-00-00</strong></p>
 
         </form>
     </div>

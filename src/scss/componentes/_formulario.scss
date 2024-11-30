@@ -25,4 +25,23 @@
             cursor: not-allowed;
         }
     }
+
+    .campo select {
+        flex: 1;
+        border: none;
+        padding: 1rem; /* Aumento del relleno */
+        font-size: 1.5rem; /* Aumento del tamaño de la fuente */
+        border-radius: 1rem;
+        background-color: #f0f0f0; /* Color de fondo más claro */
+        cursor: pointer; /* Cambiar el cursor al pasar por encima */
+        height: 3rem; /* Ajuste de altura para mayor visibilidad */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra para hacerlo más visible */
+    }
+
+
+    .campo select:disabled {
+    background-color: lighten(v.$negro, 10%);
+    color: v.$blanco;
+    cursor: not-allowed;
+    }
 }

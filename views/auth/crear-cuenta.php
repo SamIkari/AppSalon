@@ -25,13 +25,30 @@
                 value="<?php echo s($usuario->apellido); ?>">
     </div>
     <div class="campo">
-        <label for="telefono">Teléfono</label>
-        <input type="tel"
-                id="telefono"
-                name="telefono"
-                placeholder="Ingresa tu teléfono"
-                value="<?php echo s($usuario->telefono); ?>">
-    </div>
+    <label for="telefono">Teléfono</label>
+    <input type="tel"
+           id="telefono"
+           name="telefono"
+           placeholder="325-100-00-00"
+           value="<?php echo s($usuario->telefono); ?>"
+           oninput="validarTelefono(event)"
+           maxlength="10"  
+           required>
+</div>
+
+<script>
+function validarTelefono(event) {
+    const input = event.target;
+    input.value = input.value.replace(/[^0-9]/g, ''); // Elimina todo excepto números
+
+    // Evitar copiar/pegar contenido no numérico
+    if (!/^[0-9]*$/.test(input.value)) {
+        input.value = input.value.replace(/[^0-9]/g, '');
+    }
+}
+</script>
+
+
     <div class="campo">
         <label for="email">E-mail</label>
         <input type="email"

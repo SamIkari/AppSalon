@@ -49,6 +49,8 @@ $router->post('/servicios/crear', [ServicioController::class, 'crear']);
 $router->get('/servicios/actualizar', [ServicioController::class, 'actualizar']);
 $router->post('/servicios/actualizar', [ServicioController::class, 'actualizar']);
 $router->post('/servicios/eliminar', [ServicioController::class, 'eliminar']);
+$router->get('/api/servicios', [ServicioController::class, 'serviciosActivos']);
+
 
 // Comprueba y valida las rutas
 $router->comprobarRutas();

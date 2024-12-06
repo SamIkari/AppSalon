@@ -33,4 +33,10 @@ class Servicio extends ActiveRecord {
 
         return self::$alertas;
     }
+
+    public static function obtenerActivos() {
+        $query = "SELECT * FROM " . self::$tabla . " WHERE estado = 1";
+        return self::consultarSQL($query);
+    }
+    
 }

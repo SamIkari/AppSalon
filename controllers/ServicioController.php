@@ -86,4 +86,12 @@ class ServicioController {
             header('Location: /servicios');
         }
     }
+    public static function serviciosActivos() {
+        // Llamar al modelo para obtener solo los servicios activos
+        $servicios = Servicio::obtenerActivos();
+    
+        // Retornar los servicios como JSON para el frontend
+        echo json_encode($servicios);
+    }
+    
 }

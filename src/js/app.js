@@ -16,9 +16,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function iniciarApp() {
     mostrarSeccion(); // Muestra y oculta las secciones
-    tabs(); // Cambia la sección cuando se presionen los tabs
+    tabs(); // Cambia la sección cuando se presionan los tabs
     botonesPaginador(); // Agrega o quita los botones del paginador
-    paginaSiguiente(); 
+    paginaSiguiente();
     paginaAnterior();
 
     consultarAPI(); // Consulta la API en el backend de PHP
@@ -29,10 +29,10 @@ function iniciarApp() {
     seleccionarHora(); // Añade la hora de la cita en el objeto
 
     mostrarResumen(); // Muestra el resumen de la cita
+    obtenerServicios();
 }
 
 function mostrarSeccion() {
-
     // Ocultar la sección que tenga la clase de mostrar
     const seccionAnterior = document.querySelector('.mostrar');
     if(seccionAnterior) {
@@ -56,17 +56,14 @@ function mostrarSeccion() {
 }
 
 function tabs() {
-
     // Agrega y cambia la variable de paso según el tab seleccionado
     const botones = document.querySelectorAll('.tabs button');
     botones.forEach( boton => {
         boton.addEventListener('click', function(e) {
             e.preventDefault();
-
             paso = parseInt( e.target.dataset.paso );
             mostrarSeccion();
-
-            botonesPaginador(); 
+            botonesPaginador();
         });
     });
 }
@@ -81,7 +78,6 @@ function botonesPaginador() {
     } else if (paso === 3) {
         paginaAnterior.classList.remove('ocultar');
         paginaSiguiente.classList.add('ocultar');
-
         mostrarResumen();
     } else {
         paginaAnterior.classList.remove('ocultar');
@@ -94,32 +90,27 @@ function botonesPaginador() {
 function paginaAnterior() {
     const paginaAnterior = document.querySelector('#anterior');
     paginaAnterior.addEventListener('click', function() {
-
         if(paso <= pasoInicial) return;
         paso--;
-        
         botonesPaginador();
     })
 }
+
 function paginaSiguiente() {
     const paginaSiguiente = document.querySelector('#siguiente');
     paginaSiguiente.addEventListener('click', function() {
-
         if(paso >= pasoFinal) return;
         paso++;
-        
         botonesPaginador();
     })
 }
 
 async function consultarAPI() {
-
     try {
         const url = 'http://localhost:3000/api/servicios';
         const resultado = await fetch(url);
         const servicios = await resultado.json();
         mostrarServicios(servicios);
-    
     } catch (error) {
         console.log(error);
     }
@@ -148,7 +139,6 @@ function mostrarServicios(servicios) {
         servicioDiv.appendChild(precioServicio);
 
         document.querySelector('#servicios').appendChild(servicioDiv);
-
     });
 }
 
@@ -169,12 +159,12 @@ function seleccionarServicio(servicio) {
         cita.servicios = [...servicios, servicio];
         divServicio.classList.add('seleccionado');
     }
-    // console.log(cita);
 }
 
 function idCliente() {
     cita.id = document.querySelector('#id').value;
 }
+
 function nombreCliente() {
     cita.nombre = document.querySelector('#nombre').value;
 }
@@ -182,16 +172,13 @@ function nombreCliente() {
 function seleccionarFecha() {
     const inputFecha = document.querySelector('#fecha');
     inputFecha.addEventListener('input', function(e) {
-
         const dia = new Date(e.target.value).getUTCDay();
-
-        if( [0].includes(dia) ) {
+        if([0].includes(dia)) {
             e.target.value = '';
             mostrarAlerta('Domingos no trabajamos', 'error', '.formulario');
         } else {
             cita.fecha = e.target.value;
         }
-        
     });
 }
 
@@ -211,16 +198,12 @@ function seleccionarHora() {
     });
 }
 
-
 function mostrarAlerta(mensaje, tipo, elemento, desaparece = true) {
-
-    // Previene que se generen más de 1 alerta
     const alertaPrevia = document.querySelector('.alerta');
     if(alertaPrevia) {
         alertaPrevia.remove();
     }
 
-    // Scripting para crear la alerta
     const alerta = document.createElement('DIV');
     alerta.textContent = mensaje;
     alerta.classList.add('alerta');
@@ -230,40 +213,29 @@ function mostrarAlerta(mensaje, tipo, elemento, desaparece = true) {
     referencia.appendChild(alerta);
 
     if(desaparece) {
-        // Eliminar la alerta
         setTimeout(() => {
             alerta.remove();
         }, 3000);
     }
-  
 }
-
 
 function mostrarResumen() {
     const resumen = document.querySelector('.contenido-resumen');
-
-    // Limpiar el Contenido de Resumen
     while(resumen.firstChild) {
         resumen.removeChild(resumen.firstChild);
     }
 
     if(Object.values(cita).includes('') || cita.servicios.length === 0 ) {
         mostrarAlerta('Faltan datos de Servicios, Fecha u Hora', 'error', '.contenido-resumen', false);
-
         return;
     } 
 
-    // Formatear el div de resumen
     const { nombre, fecha, hora, servicios } = cita;
 
-
-
-    // Heading para Servicios en Resumen
     const headingServicios = document.createElement('H3');
     headingServicios.textContent = 'Resumen de Servicios';
     resumen.appendChild(headingServicios);
 
-    // Iterando y mostrando los servicios
     servicios.forEach(servicio => {
         const { id, precio, nombre } = servicio;
         const contenedorServicio = document.createElement('DIV');
@@ -281,7 +253,6 @@ function mostrarResumen() {
         resumen.appendChild(contenedorServicio);
     });
 
-    // Heading para Cita en Resumen
     const headingCita = document.createElement('H3');
     headingCita.textContent = 'Resumen de Cita';
     resumen.appendChild(headingCita);
@@ -289,15 +260,13 @@ function mostrarResumen() {
     const nombreCliente = document.createElement('P');
     nombreCliente.innerHTML = `<span>Nombre:</span> ${nombre}`;
 
-    // Formatear la fecha en español
     const fechaObj = new Date(fecha);
     const mes = fechaObj.getMonth();
     const dia = fechaObj.getDate() + 2;
     const year = fechaObj.getFullYear();
-
     const fechaUTC = new Date( Date.UTC(year, mes, dia));
-    
-    const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}
+
+    const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'};
     const fechaFormateada = fechaUTC.toLocaleDateString('es-MX', opciones);
 
     const fechaCita = document.createElement('P');
@@ -306,7 +275,6 @@ function mostrarResumen() {
     const horaCita = document.createElement('P');
     horaCita.innerHTML = `<span>Hora:</span> ${hora} Horas`;
 
-    // Boton para Crear una cita
     const botonReservar = document.createElement('BUTTON');
     botonReservar.classList.add('boton');
     botonReservar.textContent = 'Reservar Cita';
@@ -315,13 +283,13 @@ function mostrarResumen() {
     resumen.appendChild(nombreCliente);
     resumen.appendChild(fechaCita);
     resumen.appendChild(horaCita);
-
     resumen.appendChild(botonReservar);
 }
 
+
 async function reservarCita() {
     
-    const { nombre, fecha, hora, servicios, id } = cita;
+    const { nombre, fecha, hora, servicios, id } = cita;
 
     const idServicios = servicios.map( servicio => servicio.id );
     // console.log(idServicios);
@@ -329,9 +297,11 @@ async function reservarCita() {
     const datos = new FormData();
     
     datos.append('fecha', fecha);
-    datos.append('hora', hora );
+    datos.append('hora', hora );
     datos.append('usuarioId', id);
     datos.append('servicios', idServicios);
+
+    // console.log([...datos]);
 
     try {
         // Petición hacia la api
@@ -367,62 +337,15 @@ async function reservarCita() {
     
     // console.log([...datos]);
 
-}// Función para cambiar el estado de un servicio
-function cambiarEstadoServicio(id, estado) {
-    const accion = estado === 1 ? 'activar' : 'desactivar';
-    // Mostrar la alerta de confirmación
-    Swal.fire({
-        title: `¿Estás seguro de que quieres ${accion} el servicio?`,
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: `Sí, ${accion}lo`,
-        cancelButtonText: 'No, cancelar',
-        reverseButtons: true,
-    }).then((result) => {
-        if (result.isConfirmed) {
-            // Si el usuario confirma, enviamos la solicitud
-            const formData = new FormData();
-            formData.append('id', id);
-            formData.append('estado', estado); // 1 para activar, 0 para desactivar
+}
 
-            fetch('/api/cambiarEstado', {
-                method: 'POST',
-                body: formData,
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Cambiar el estado visual del servicio dependiendo del resultado
-                const servicioElement = document.getElementById('servicio-' + id);
-                if (data.estado == 1) {
-                    servicioElement.classList.remove('desactivado');
-                    servicioElement.classList.add('activo');
-                } else {
-                    servicioElement.classList.remove('activo');
-                    servicioElement.classList.add('desactivado');
-                }
-
-                // Mostrar una alerta de éxito
-                Swal.fire({
-                    icon: 'success',
-                    title: `${accion.charAt(0).toUpperCase() + accion.slice(1)} exitoso`,
-                    text: `El servicio ha sido ${accion}do correctamente.`,
-                });
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Hubo un error al cambiar el estado del servicio.',
-                });
-            });
-        } else {
-            // Si el usuario cancela
-            Swal.fire({
-                icon: 'info',
-                title: 'Acción cancelada',
-                text: 'El servicio no ha sido modificado.',
-            });
-        }
+function obtenerServicios() {
+    const servicios = document.querySelectorAll('.servicio');
+    servicios.forEach(servicio => {
+        servicio.addEventListener('click', function() {
+            // Activa o desactiva el servicio seleccionado
+            const id = servicio.dataset.idServicio;
+            seleccionarServicio(id);
+        });
     });
 }

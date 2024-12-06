@@ -6,11 +6,14 @@ use Model\CitaServicio;
 use Model\Servicio;
 
 class APIController {
+    // Obtener todos los servicios
     public static function index() {
-        $servicios = Servicio::all();
+        header('Content-Type: application/json');
+        $servicios = Servicio::all(); // Asegúrate de que el método all() esté bien implementado
         echo json_encode($servicios);
     }
 
+    // Guardar cita con servicios seleccionados
     public static function guardar() {
         $cita = new Cita($_POST);
         $resultado = $cita->guardar();
@@ -29,6 +32,17 @@ class APIController {
         echo json_encode(['resultado' => $resultado]);
     }
 
+    public static function eliminar() {
+        
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = $_POST['id'];
+            $cita = Cita::find($id);
+            $cita->eliminar();
+            header('Location:' . $_SERVER['HTTP_REFERER']);
+        }
+    }
+
+    // Cambiar estado de servicio (activo o inactivo)
     public static function cambiarEstado() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = $_POST['id'];
@@ -50,3 +64,4 @@ class APIController {
         }
     }
 }
+?>

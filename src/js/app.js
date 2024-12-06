@@ -367,4 +367,62 @@ async function reservarCita() {
     
     // console.log([...datos]);
 
+}// Función para cambiar el estado de un servicio
+function cambiarEstadoServicio(id, estado) {
+    const accion = estado === 1 ? 'activar' : 'desactivar';
+    // Mostrar la alerta de confirmación
+    Swal.fire({
+        title: `¿Estás seguro de que quieres ${accion} el servicio?`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: `Sí, ${accion}lo`,
+        cancelButtonText: 'No, cancelar',
+        reverseButtons: true,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Si el usuario confirma, enviamos la solicitud
+            const formData = new FormData();
+            formData.append('id', id);
+            formData.append('estado', estado); // 1 para activar, 0 para desactivar
+
+            fetch('/api/cambiarEstado', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Cambiar el estado visual del servicio dependiendo del resultado
+                const servicioElement = document.getElementById('servicio-' + id);
+                if (data.estado == 1) {
+                    servicioElement.classList.remove('desactivado');
+                    servicioElement.classList.add('activo');
+                } else {
+                    servicioElement.classList.remove('activo');
+                    servicioElement.classList.add('desactivado');
+                }
+
+                // Mostrar una alerta de éxito
+                Swal.fire({
+                    icon: 'success',
+                    title: `${accion.charAt(0).toUpperCase() + accion.slice(1)} exitoso`,
+                    text: `El servicio ha sido ${accion}do correctamente.`,
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Hubo un error al cambiar el estado del servicio.',
+                });
+            });
+        } else {
+            // Si el usuario cancela
+            Swal.fire({
+                icon: 'info',
+                title: 'Acción cancelada',
+                text: 'El servicio no ha sido modificado.',
+            });
+        }
+    });
 }

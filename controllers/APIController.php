@@ -1,5 +1,4 @@
 <?php
-
 namespace Controllers;
 
 use Model\Cita;
@@ -13,16 +12,10 @@ class APIController {
     }
 
     public static function guardar() {
-        
-        // Almacena la Cita y devuelve el ID
         $cita = new Cita($_POST);
         $resultado = $cita->guardar();
-
         $id = $resultado['id'];
 
-        // Almacena la Cita y el Servicio
-
-        // Almacena los Servicios con el ID de la Cita
         $idServicios = explode(",", $_POST['servicios']);
         foreach($idServicios as $idServicio) {
             $args = [
@@ -36,13 +29,24 @@ class APIController {
         echo json_encode(['resultado' => $resultado]);
     }
 
-    public static function eliminar() {
-        
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+    public static function cambiarEstado() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = $_POST['id'];
-            $cita = Cita::find($id);
-            $cita->eliminar();
-            header('Location:' . $_SERVER['HTTP_REFERER']);
+            $nuevoEstado = $_POST['estado']; // 1 = Activo, 0 = Inactivo
+
+            $servicio = Servicio::find($id);
+
+            if ($servicio) {
+                $servicio->estado = $nuevoEstado;
+                $resultado = $servicio->guardar();
+
+                echo json_encode([
+                    'resultado' => $resultado ? 'exito' : 'error',
+                    'estado' => $nuevoEstado
+                ]);
+            } else {
+                echo json_encode(['resultado' => 'error']);
+            }
         }
     }
 }
